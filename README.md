@@ -8,7 +8,7 @@
 
 </div>
 
-The official PyTorch implementation of the paper [**"Goal Force: Teaching Video Models To Accomplish Physics-Conditioned Goals"**](https://goal-force.github.io/). Please check out our preprint [**(arXiv link)**](https://arxiv.org/abs/XXXX.XXXXX) for more details.
+The official PyTorch implementation of the paper [**"Goal Force: Teaching Video Models To Accomplish Physics-Conditioned Goals"**](https://goal-force.github.io/). Please check out our preprint [**(arXiv link)**](https://arxiv.org/abs/2601.05848) for more details.
 
 ![teaser](assets/teaser_dog.gif)
 
