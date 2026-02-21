@@ -1,0 +1,2 @@
+image,projectile_force_angle,projectile_force_magnitude,projectile_coordx,projectile_coordy,projectile_mass,target_indirect_force_angle,target_indirect_force_magnitude,target_coordx,target_coordy,target_mass,width,height,caption
+_paw_tool1.png,-1,-1,513,201,-1,335,350,513,201,3.5,832,480,"A dog paw nudges a chess piece, causing it to slide across the board."

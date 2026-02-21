@@ -1,0 +1,2 @@
+image,projectile_force_angle,projectile_force_magnitude,projectile_coordx,projectile_coordy,projectile_mass,target_indirect_force_angle,target_indirect_force_magnitude,target_coordx,target_coordy,target_mass,width,height,caption
+_golf.png,-1.0,-1.0,457,200,-1,185.0,350.0,195,203,-1,832,480,"A golf club hits a golf ball."

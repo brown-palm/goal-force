@@ -1,0 +1,2 @@
+image,projectile_force_angle,projectile_force_magnitude,projectile_coordx,projectile_coordy,projectile_mass,target_indirect_force_angle,target_indirect_force_magnitude,target_coordx,target_coordy,target_mass,width,height,caption
+_ballthendominos.png,-1.0,-1.0,241,104,-1,5.0,350.0,356,112,-1,832,480,"One pool ball hits the other, which then hits the first domino, triggering a chain reaction"

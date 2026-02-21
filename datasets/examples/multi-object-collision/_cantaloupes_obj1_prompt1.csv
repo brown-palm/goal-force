@@ -1,0 +1,2 @@
+image,projectile_force_angle,projectile_force_magnitude,projectile_coordx,projectile_coordy,projectile_mass,target_indirect_force_angle,target_indirect_force_magnitude,target_coordx,target_coordy,target_mass,width,height,caption
+_cantaloupes.png,-1,-1,326,175,-1,0,350,594,163,3.5,832,480,"A cantaloupe rolls across the surface, colliding with another cantaloupe."
