@@ -1,0 +1,13 @@
+datasets/train
+checkpoints
+.vscode/settings.json
+models
+__pycache__
+wandb
+conda-env
+diffsynth.egg-info
+temp
+datasets/OpenVid-1M/OpenVid-1M-train
+outputs
+datasets/OpenVid-1M/OpenVid-1M-cache.pkl
+.env
