@@ -51,6 +51,21 @@ conda activate $CONDA_ENV_DIR
 ```
 </details>
 
+<details>
+  <summary><b> Download base model (Wan 2.2) </b></summary>
+
+<br>
+
+This script runs inference using the base video model on an image of a cat.
+It will download the weights in the process.
+If this outputs a video, you'll know your setup works.
+
+```bash
+python scripts/inference/inference-Wan2.2-I2V-A14B-base-model-demo.py
+```
+
+</details>
+
 
 
 ## Inference: Goal Force
@@ -112,20 +127,7 @@ python scripts/test_dataset_preprocessing/app_dataset_preprocessing.py
 </details>
 
 
-<details>
-  <summary><b> Download base model (Wan 2.2) </b></summary>
 
-<br>
-
-This script runs inference using the base video model on an image of a cat.
-It will download the weights in the process.
-If this outputs a video, you'll know your setup works.
-
-```bash
-python scripts/inference/inference-Wan2.2-I2V-A14B-base-model-demo.py
-```
-
-</details>
 
 
 
@@ -194,20 +196,6 @@ datasets/
 
 </details>
 
-<details>
-  <summary><b> Download base model (Wan 2.2) </b></summary>
-
-<br>
-
-This script runs inference using the base video model on an image of a cat.
-It will download the weights in the process.
-If this outputs a video, you'll know your setup works.
-
-```bash
-python scripts/inference/inference-Wan2.2-I2V-A14B-base-model-demo.py
-```
-
-</details>
 
 
 <details>
@@ -270,21 +258,6 @@ datasets/OpenVid-1M/OpenVid-1M-train/
 ├── OpenVidHD.csv
 ├── download        (zip folder)
 └── video           (video folder)
-```
-
-</details>
-
-<details>
-  <summary><b> Download base model (Wan 2.2) </b></summary>
-
-<br>
-
-This script runs inference using the base video model on an image of a cat.
-It will download the weights in the process.
-If this outputs a video, you'll know your setup works.
-
-```bash
-python scripts/inference/inference-Wan2.2-I2V-A14B-base-model-demo.py
 ```
 
 </details>
