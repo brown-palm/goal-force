@@ -1,7 +1,7 @@
 datasets/train
 checkpoints
 .vscode/settings.json
-models
+/models
 __pycache__
 wandb
 conda-env
