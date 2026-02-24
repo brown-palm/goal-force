@@ -113,8 +113,8 @@
         }
         .parameter-inputs {
             display: flex;
-            flex-direction: column; /* Changed to column for better stacking of input groups */
-            gap: 10px; /* Reduced gap between input groups */
+            flex-direction: column; 
+            gap: 10px; 
             margin: 15px 0;
         }
         .input-group {
@@ -124,7 +124,7 @@
         }
         .input-group label {
             font-weight: bold;
-            min-width: 90px; /* Added to align labels */
+            min-width: 90px; 
         }
         .input-group input {
             width: 80px;
@@ -158,7 +158,7 @@
                 <input type="file" id="imageInput" accept="image/*">
                 <select id="aspectRatio">
                     <option value="1.7333">1.7333:1 (Wan 2.2) - Outputs 832x480 px</option>
-                    </select>
+                </select>
                 <button id="saveBtn" class="btn" disabled>Save Selection</button>
             </div>
             <div class="image-container">
@@ -172,10 +172,10 @@
             <div class="flex-container">
                 <div class="flex-item">
                     <h3>Cropped Image</h3>
-                    <p>Click on the image to select the <b>Projectile</b>, then the <b>Target</b>.</p>
+                    <p>Click on the image to select the <b>Target</b> coordinate.</p>
                     <img id="croppedPreview">
                     <div class="coordinate-display" id="coordinateDisplay">
-                        Click to select Projectile coordinate
+                        Click to select Target coordinate
                     </div>
                 </div>
                 <div class="flex-item">
@@ -187,14 +187,6 @@
                     <h3>Results</h3>
                     <textarea id="optimizedPrompt" placeholder="Optimized prompt will appear here..."></textarea>
                     <div class="parameter-inputs">
-                        <!-- <div class="input-group">
-                            <label for="projectileAngleInput">Proj. Angle:</label>
-                            <input type="number" id="projectileAngleInput" value="0.0" step="0.1">
-                        </div>
-                        <div class="input-group">
-                            <label for="projectileForceInput">Proj. Force:</label>
-                            <input type="number" id="projectileForceInput" value="350.0" step="0.1">
-                        </div> -->
                         <div class="input-group">
                             <label for="targetAngleInput">Target Angle:</label>
                             <input type="number" id="targetAngleInput" value="0.0" step="0.1">
@@ -227,10 +219,8 @@
         const coordinateDisplay = document.getElementById('coordinateDisplay');
         const optimizationStatus = document.getElementById('optimizationStatus');
         const csvStatus = document.getElementById('csvStatus');
-        const projectileAngleInput = document.getElementById('projectileAngleInput');
-        const projectileForceInput = document.getElementById('projectileForceInput');
-        const targetAngleInput = document.getElementById('targetAngleInput'); // ADDED
-        const targetForceInput = document.getElementById('targetForceInput'); // ADDED
+        const targetAngleInput = document.getElementById('targetAngleInput'); 
+        const targetForceInput = document.getElementById('targetForceInput'); 
         
         // Variables for selection and cropping
         let isDrawing = false;
@@ -239,11 +229,8 @@
         let selectionOffsetX, selectionOffsetY;
         let currentImagePath = '';
         
-        let projectileCoordX = null;
-        let projectileCoordY = null;
         let targetCoordX = null;
         let targetCoordY = null;
-        let selectionMode = 'projectile'; // 'projectile' or 'target'
 
         let prevCoordX = null;
         let prevCoordY = null;
@@ -267,24 +254,19 @@
             const aspectRatio = parseFloat(aspectRatioInput.value);
             
             let width, height;
-            const BORDER_WIDTH = 10;  // Border width in pixels
+            const BORDER_WIDTH = 10;
             
-            // If image is wider than tall (accounting for aspect ratio)
             if (dims.width / dims.height > aspectRatio) {
-                // Height is the limiting factor
                 height = dims.height - (2 * BORDER_WIDTH);
                 width = height * aspectRatio;
             } else {
-                // Width is the limiting factor
                 width = dims.width - (2 * BORDER_WIDTH);
                 height = width / aspectRatio;
             }
             
-            // Center the selection with a margin to prevent overflow
             const left = Math.max(BORDER_WIDTH, (dims.width - width) / 2);
             const top = Math.max(BORDER_WIDTH, (dims.height - height) / 2);
             
-            // Apply the calculated dimensions
             selection.style.left = `${left}px`;
             selection.style.top = `${top}px`;
             selection.style.width = `${width}px`;
@@ -300,15 +282,12 @@
                     saveBtn.disabled = false;
                     preview.style.width = '100%';
                     preview.style.height = 'auto';
-                    
-                    // Create maximum sized selection after image is loaded
-                    setTimeout(createMaxSizedSelection, 100); // Small delay to ensure image dimensions are calculated
+                    setTimeout(createMaxSizedSelection, 100); 
                 };
             }
         });
         
         aspectRatioInput.addEventListener('change', () => {
-            // Update selection with new aspect ratio
             if (preview.complete && preview.naturalWidth) {
                 createMaxSizedSelection();
             }
@@ -344,8 +323,7 @@
                 let newX = e.clientX - rect.left - selectionOffsetX;
                 let newY = e.clientY - rect.top - selectionOffsetY;
                 
-                const BORDER_WIDTH = 2;  // Border width in pixels
-                // Keep selection within image bounds
+                const BORDER_WIDTH = 2;  
                 newX = Math.max(BORDER_WIDTH, Math.min(newX, dims.width - width - BORDER_WIDTH));
                 newY = Math.max(BORDER_WIDTH, Math.min(newY, dims.height - height - BORDER_WIDTH));
                 
@@ -354,15 +332,12 @@
                 return;
             }
             
-            // Calculate current position
             let currentX = e.clientX - rect.left;
             let currentY = e.clientY - rect.top;
             
-            // Calculate width and height maintaining aspect ratio
             let width = Math.abs(currentX - startX);
             let height = width / aspectRatioInput.value;
             
-            // Calculate final coordinates based on direction
             let finalX = startX;
             let finalY = startY;
             
@@ -378,8 +353,7 @@
                 width = height * aspectRatioInput.value;
             }
             
-            // Enforce boundaries
-            const BORDER_WIDTH = 2;  // Border width in pixels
+            const BORDER_WIDTH = 2;  
             
             if (finalX < BORDER_WIDTH) {
                 finalX = BORDER_WIDTH;
@@ -400,7 +374,6 @@
                 width = height * aspectRatioInput.value;
             }
             
-            // Apply the calculated dimensions
             selection.style.left = `${finalX}px`;
             selection.style.top = `${finalY}px`;
             selection.style.width = `${width}px`;
@@ -425,11 +398,9 @@
             const rect = selection.getBoundingClientRect();
             const previewRect = preview.getBoundingClientRect();
             
-            // Calculate scale factor between display size and original image size
             const scaleX = preview.naturalWidth / previewRect.width;
             const scaleY = preview.naturalHeight / previewRect.height;
             
-            // Convert coordinates from display pixels to original image pixels
             const originalX = (rect.left - previewRect.left) * scaleX;
             const originalY = (rect.top - previewRect.top) * scaleY;
             const originalWidth = rect.width * scaleX;
@@ -444,47 +415,36 @@
             formData.append('aspect_ratio', aspectRatioInput.value);
             
             try {
-                // Use the full URL to avoid CORS issues
                 const response = await fetch(window.location.origin + '/crop', {
                     method: 'POST',
                     body: formData,
-                    credentials: 'same-origin' // Include credentials for same-origin requests
+                    credentials: 'same-origin'
                 });
                 
                 const blob = await response.blob();
                 const url = URL.createObjectURL(blob);
                 
-                // Get the filename from the response header
                 const filename = response.headers.get('X-Filename');
                 currentImagePath = 'datasets/custom_test/images/' + filename;
                 
-                // Show cropped image and activate step 2
                 croppedPreview.src = url;
                 croppedPreview.style.display = 'block';
                 stepTwoCard.style.display = 'block';
                 
-                // --- START: UPDATED RESET LOGIC ---
                 objCounter = 0;
                 promptCounter = 0;
-                projectileCoordX = null;
-                projectileCoordY = null;
                 targetCoordX = null;
                 targetCoordY = null;
                 prevCoordX = null;
                 prevCoordY = null;
-                selectionMode = 'projectile';
-                coordinateDisplay.innerHTML = 'Click to select Projectile coordinate';
-                writeCSVBtn.disabled = true; // Disable CSV button on new image
-                // --- END: UPDATED RESET LOGIC ---
+                coordinateDisplay.innerHTML = 'Click to select Target coordinate';
+                writeCSVBtn.disabled = true;
                 
-                // Clear the optimized prompt but keep the un-optimized prompt
                 optimizedPrompt.value = '';
                 
-                // Enable the optimize button
                 promptInput.disabled = false;
                 optimizeBtn.disabled = false;
                 
-                // Scroll to step 2
                 stepTwoCard.scrollIntoView({ behavior: 'smooth' });
             } catch (error) {
                 console.error('Error cropping image:', error);
@@ -492,7 +452,6 @@
             }
         });
         
-        // --- START: MODIFIED COORDINATE SELECTION ---
         croppedPreview.addEventListener('click', async (e) => {
             const rect = croppedPreview.getBoundingClientRect();
             const x = Math.round(e.clientX - rect.left);
@@ -515,48 +474,24 @@
                 
                 const data = await response.json();
                 
-                if (selectionMode === 'projectile') {
-                    projectileCoordX = data.x;
-                    projectileCoordY = data.y;
-                    
-                    // Update coordinate display
-                    coordinateDisplay.innerHTML = `
-                        <b>Projectile:</b> (x: ${projectileCoordX}, y: ${projectileCoordY})<br>
-                        Click to select Target coordinate<br>
-                        Image dimensions: ${data.width} x ${data.height}
-                    `;
-                    console.log("Projectile coordinates:", projectileCoordX, projectileCoordY);
-                    
-                    // Switch mode
-                    selectionMode = 'target';
-                } else { // selectionMode === 'target'
-                    targetCoordX = data.x;
-                    targetCoordY = data.y;
-                    
-                    // Update coordinate display
-                    coordinateDisplay.innerHTML = `
-                        <b>Projectile:</b> (x: ${projectileCoordX}, y: ${projectileCoordY})<br>
-                        <b>Target:</b> (x: ${targetCoordX}, y: ${targetCoordY})<br>
-                        Image dimensions: ${data.width} x ${data.height}
-                    `;
-                    console.log("Target coordinates:", targetCoordX, targetCoordY);
-                    
-                    // Switch back to projectile for re-selection, user can click again to re-select
-                    selectionMode = 'projectile';
-                    
-                    // If we have both coords and a prompt, enable the CSV button
-                    if (projectileCoordX !== null && targetCoordX !== null && optimizedPrompt.value.trim() !== '') {
-                        writeCSVBtn.disabled = false;
-                    }
+                targetCoordX = data.x;
+                targetCoordY = data.y;
+                
+                coordinateDisplay.innerHTML = `
+                    <b>Target:</b> (x: ${targetCoordX}, y: ${targetCoordY})<br>
+                    Image dimensions: ${data.width} x ${data.height}
+                `;
+                console.log("Target coordinates:", targetCoordX, targetCoordY);
+                
+                if (targetCoordX !== null && optimizedPrompt.value.trim() !== '') {
+                    writeCSVBtn.disabled = false;
                 }
             } catch (error) {
                 console.error('Error getting pixel coordinates:', error);
                 alert('Error getting pixel coordinates. Please try again.');
             }
         });
-        // --- END: MODIFIED COORDINATE SELECTION ---
         
-        // Handle prompt optimization
         optimizeBtn.addEventListener('click', async () => {
             const prompt = promptInput.value.trim();
             if (!prompt) {
@@ -591,9 +526,7 @@
                 optimizationStatus.textContent = 'Prompt optimized successfully!';
                 optimizationStatus.className = 'status success';
                 
-                // If coordinates are selected, enable the CSV button
-                // UPDATED CHECK
-                if (projectileCoordX !== null && projectileCoordY !== null && targetCoordX !== null && targetCoordY !== null) {
+                if (targetCoordX !== null && targetCoordY !== null) {
                     writeCSVBtn.disabled = false;
                 }
             } catch (error) {
@@ -603,11 +536,9 @@
             }
         });
         
-        // Handle writing CSV
         writeCSVBtn.addEventListener('click', async () => {
-            // UPDATED CHECK
-            if (!currentImagePath || !optimizedPrompt.value || projectileCoordX === null || projectileCoordY === null || targetCoordX === null || targetCoordY === null) {
-                csvStatus.textContent = 'Missing required information. Please select projectile/target coordinates and optimize prompt.';
+            if (!currentImagePath || !optimizedPrompt.value || targetCoordX === null || targetCoordY === null) {
+                csvStatus.textContent = 'Missing required information. Please select target coordinates and optimize prompt.';
                 csvStatus.className = 'status error';
                 csvStatus.style.display = 'block';
                 return;
@@ -618,29 +549,18 @@
             csvStatus.style.display = 'block';
             
             try {
-                console.log("Before CSV request - state:", {
-                    objCounter, promptCounter, 
-                    prevCoordX, prevCoordY, 
-                    projectileCoordX, projectileCoordY, targetCoordX, targetCoordY
-                });
-                
                 const response = await fetch('/write_csv', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    // UPDATED BODY with new target force inputs
                     body: JSON.stringify({
                         image_path: currentImagePath,
                         caption: optimizedPrompt.value,
-                        projectile_coordx: projectileCoordX,
-                        projectile_coordy: projectileCoordY,
                         target_coordx: targetCoordX,
                         target_coordy: targetCoordY,
-                        projectile_force_angle: projectileAngleInput.value,
-                        projectile_force_magnitude: projectileForceInput.value,
-                        target_indirect_force_angle: targetAngleInput.value, // ADDED
-                        target_indirect_force_magnitude: targetForceInput.value, // ADDED
+                        target_indirect_force_angle: targetAngleInput.value, 
+                        target_indirect_force_magnitude: targetForceInput.value, 
                         prev_coord_x: prevCoordX,
                         prev_coord_y: prevCoordY,
                         prev_obj_counter: objCounter,
@@ -653,18 +573,10 @@
                     throw new Error(data.error);
                 }
                 
-                // Update the counters
                 objCounter = data.obj_counter;
                 promptCounter = data.prompt_counter;
-                // Update prevCoordX/Y to the projectile's coords for the next count
-                prevCoordX = projectileCoordX;
-                prevCoordY = projectileCoordY;
-                
-                console.log("After CSV request - updated state:", {
-                    objCounter, promptCounter, 
-                    prevCoordX, prevCoordY, 
-                    csvPath: data.csv_path
-                });
+                prevCoordX = targetCoordX;
+                prevCoordY = targetCoordY;
                 
                 csvStatus.textContent = `CSV created successfully: ${data.csv_path}`;
                 csvStatus.className = 'status success';

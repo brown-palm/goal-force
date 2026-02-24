@@ -80,8 +80,6 @@ def crop_image():
     # Resize based on aspect ratio
     if abs(aspect_ratio - 1.7333) < 0.01:
         target_size = (832, 480)  # Width x Height for 1.5 aspect ratio
-    # elif abs(aspect_ratio - 1.7708) < 0.01:
-    #     target_size = (1360, 768)  # Width x Height for 1.7708 aspect ratio
     else:
         # Default - don't resize
         target_size = None
@@ -93,7 +91,6 @@ def crop_image():
         resized = cropped
 
     # Convert to RGB to remove the alpha channel before saving
-    # This will fix the 'rgba' output issue
     resized = resized.convert('RGB')
     
     # Generate a new filename with underscore prefix
@@ -126,7 +123,6 @@ def optimize_prompt():
     if not os.path.exists(image_path):
         return jsonify({'error': f'Image not found: {image_path}'}), 404
     
-    # Use the image-to-video (i2v) prompt optimization logic
     try:
         client = OpenAI(api_key=api_key)
          
@@ -177,15 +173,12 @@ def get_pixel():
     scale_y = actual_height / displayed_height
     
     # Convert click coordinates to actual image coordinates
-    # The y coordinate needs to be measured from the top of the displayed image
-    # and then convert to the bottom-left origin system
     actual_x = int(x * scale_x)
     
     # First calculate the y-coordinate in the top-left origin system
     actual_y_top = int(y * scale_y)
     
     # Then convert to bottom-left origin
-    # This is what was going wrong - we need to handle the conversion correctly
     y_bottom_left = actual_height - actual_y_top
     
     # Make sure coordinates are in bounds
@@ -204,14 +197,10 @@ def write_csv():
     data = request.json
     image_path = data.get('image_path')
     caption = data.get('caption')
-    projectile_coordx = data.get('projectile_coordx')
-    projectile_coordy = data.get('projectile_coordy')
     target_coordx = data.get('target_coordx') 
     target_coordy = data.get('target_coordy') 
-    projectile_force_angle = data.get('projectile_force_angle', 0.0)
-    projectile_force_magnitude = data.get('projectile_force_magnitude', 350.0)
-    target_indirect_force_angle = data.get('target_indirect_force_angle', 0.0) # ADDED
-    target_indirect_force_magnitude = data.get('target_indirect_force_magnitude', 350.0) # ADDED
+    target_indirect_force_angle = data.get('target_indirect_force_angle', 0.0) 
+    target_indirect_force_magnitude = data.get('target_indirect_force_magnitude', 350.0)
     prev_coord_x = data.get('prev_coord_x')
     prev_coord_y = data.get('prev_coord_y')
     prev_obj_counter = data.get('prev_obj_counter', 0)
@@ -226,9 +215,9 @@ def write_csv():
     prompt_counter = prev_prompt_counter
     
     # If coordinates have changed, increment object counter and reset prompt counter
-    # Note: This logic still bases the "object" on the projectile coordinate
+    # Logic now bases the "object" on the target coordinate
     if prev_coord_x is not None and prev_coord_y is not None:
-        if int(projectile_coordx) != int(prev_coord_x) or int(projectile_coordy) != int(prev_coord_y):
+        if int(target_coordx) != int(prev_coord_x) or int(target_coordy) != int(prev_coord_y):
             obj_counter += 1
             prompt_counter = 1
         else:
@@ -245,35 +234,16 @@ def write_csv():
     csv_filename = f"{image_name}_obj{obj_counter}_prompt{prompt_counter}.csv"
     csv_path = os.path.join(output_dir, csv_filename)
     
-    # --- START: MODIFIED CSV WRITING ---
-    
-    # Create the two rows
-    row1 = {
-        'image': image_basename,
-        'projectile_force_angle': float(projectile_force_angle),
-        'projectile_force_magnitude': float(projectile_force_magnitude),
-        'projectile_coordx': int(projectile_coordx),
-        'projectile_coordy': int(projectile_coordy),
-        'projectile_mass': -1, 
-        'target_indirect_force_angle': -1.0, 
-        'target_indirect_force_magnitude': -1.0, 
-        'target_coordx': int(target_coordx), 
-        'target_coordy': int(target_coordy), 
-        'target_mass': -1, 
-        'width': width,
-        'height': height,
-        'caption': caption,
-    }
-    
-    row2 = {
+    # Single row for indirect force only
+    row = {
         'image': image_basename,
         'projectile_force_angle': -1.0,
         'projectile_force_magnitude': -1.0,
-        'projectile_coordx': int(projectile_coordx),
-        'projectile_coordy': int(projectile_coordy),
+        'projectile_coordx': -1,
+        'projectile_coordy': -1,
         'projectile_mass': -1, 
-        'target_indirect_force_angle': float(target_indirect_force_angle), # UPDATED
-        'target_indirect_force_magnitude': float(target_indirect_force_magnitude), # UPDATED
+        'target_indirect_force_angle': float(target_indirect_force_angle), 
+        'target_indirect_force_magnitude': float(target_indirect_force_magnitude), 
         'target_coordx': int(target_coordx), 
         'target_coordy': int(target_coordy), 
         'target_mass': -1, 
@@ -294,10 +264,7 @@ def write_csv():
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         
         writer.writeheader()
-        # writer.writerow(row1) # row1: direct force (e.g. Force Prompting)
-        writer.writerow(row2) # row2: indirect force (e.g. Goal Force)
-    
-    # --- END: MODIFIED CSV WRITING ---
+        writer.writerow(row) 
     
     return jsonify({
         'success': True,
