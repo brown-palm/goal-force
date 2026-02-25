@@ -11,4 +11,5 @@ datasets/OpenVid-1M/OpenVid-1M-train
 outputs
 datasets/OpenVid-1M/OpenVid-1M-cache.pkl
 .env
+.DS_Store
 cat_fightning.mp4
