@@ -1,7 +1,7 @@
 datasets/train
 checkpoints
 .vscode/settings.json
-models
+/models
 __pycache__
 wandb
 conda-env
@@ -12,3 +12,4 @@ outputs
 datasets/OpenVid-1M/OpenVid-1M-cache.pkl
 .env
 .DS_Store
+cat_fightning.mp4
