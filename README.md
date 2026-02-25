@@ -38,17 +38,12 @@ python -c 'import torch; print(torch.cuda.is_available()); a = torch.zeros(5); a
 pip install -e . --prefix=$CONDA_ENV_DIR
 ```
 
-</details>
-
-<details>
-  <summary><b> Activate conda environment </b></summary>
-
-<br>
-
+Activate conda environment:
 ```bash
 CONDA_ENV_DIR=${PWD}/conda-env
 conda activate $CONDA_ENV_DIR
 ```
+
 </details>
 
 <details>
