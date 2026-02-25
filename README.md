@@ -68,19 +68,19 @@ python scripts/inference/inference-Wan2.2-I2V-A14B-base-model-demo.py
   <summary><b> Data preprocessing (custom scenes, optional) </b></summary>
 <br>
 
-If you want to run inference on your own images, then we recommend using the [Flask app](scripts/test_dataset_preprocessing/app_dataset_preprocessing.py) that we built for data preprocessing. This app provides a unified UI which takes care of the relevant details and generates the corresponding csv file for inference.
+If you want to run inference on your own images, then we recommend using the [Flask app](scripts/test_dataset_preprocessing/app_dataset_preprocessing_goal_force.py) that we built for data preprocessing. This app provides a unified UI which takes care of the relevant details and generates the corresponding csv file for inference.
 
 The app allows you to:
 - Crop and resize images to the correct resolution (832x480) and aspect ratio
-- Select pixel coordinates for projectile and target objects
-- Set force angles and magnitudes for both projectile and target forces
+- Select pixel coordinates for target object
+- Set force angle and magnitude for target force
 - Upscale text prompts using OpenAI's API (requires an OpenAI API key)
 - Generate CSV files in the correct format for inference
 
 **Note:**
 - In order to use the prompt upscaling part of our Flask app, you will need an OpenAI API key; we recommend creating a `.env` file and adding the line `OPENAI_API_KEY=<your_key>`.
 - By default, the app saves the CSV file and the corresponding processed image to `datasets/custom_test`. Please ensure the path matches in the shell script when calling the inference.
-- The app does not handle object mass explicitly. If you want to specify object mass instead of having it auto-inferred by the model, please go to the corresponding csv file and adjust the mass values manually (in the range of 1.0 to 4.0). By default the mass values are -1 for auto-inference.
+- The app does not handle object mass explicitly. If you want to specify object mass instead of having it auto-inferred by the model, please go to the corresponding csv file and adjust the mass values manually (in the range of 1.0 to 4.0). By default the mass values are -1 for auto-inference (which corresponds to masking out the mass channel).
 - The `scripts/test_dataset_preprocessing/get_pixel.py` is useful for getting the x/y pixel coordinates if changes are needed.
 
 <details>
@@ -106,7 +106,14 @@ The CSV columns are:
 - For **Goal Force** (target indirect force): Set `projectile_force_magnitude` to -1.0 (the `projectile_force_angle` will be ignored). Set `projectile_mass` to -1 if doing Probabilistic Task Completion. Specify `target_indirect_force_angle` (0-360°) and `target_indirect_force_magnitude` (30-400). Optionally specify `target_mass` (1.0-4.0, or set to -1 for auto-inference).
 - For **Direct Force** (projectile force): Set `target_indirect_force_magnitude` to -1.0 (the `target_indirect_force_angle` will be ignored). Set `target_mass` to -1. Specify `projectile_force_angle` (0-360°) and `projectile_force_magnitude` (30-400). Optionally specify `projectile_mass` (1.0-4.0, or set to -1 for auto-inference).
 
-**Note:** The app writes two data rows per CSV by default: First one for direct force application, with projectile force active (target force set to -1), and the second one for goal force application, with target indirect force active (projectile force set to -1). The [example CSV files](datasets/examples) show goal force application only (the second generated row). During training, both forces can be specified (neither is -1), where one may be randomly masked out, but for inference you should use separate rows with one force type each.
+**Note:** The app writes one data row per CSV by default: only the goal force active (projectile force set to -1). The [example CSV files](datasets/examples) show goal force application only. During training, both forces can be specified (neither is -1), where one may be randomly masked out, but for inference you should use separate rows with one force type each.
+
+**If you want to generate data with two rows (one with a projectile / direct force, the other with an indirect / goal force) we also provide this script:**
+
+```bash
+python scripts/test_dataset_preprocessing/app_dataset_preprocessing.py
+```
+
 </details>
 
 <br>
@@ -114,10 +121,10 @@ The CSV columns are:
 To run the Flask app:
 
 ```bash
-python scripts/test_dataset_preprocessing/app_dataset_preprocessing.py
+python scripts/test_dataset_preprocessing/app_dataset_preprocessing_goal_force.py
 ```
 
-**Tip:** If you're running this on a server using VSCode, then port forwarding will happen automatically and the flask app will work as intended. However, you can avoid latency issues by running locally—if you're preprocessing a lot of data you may find the latency burdensome.
+**Tip:** If you're running this on a server using VSCode, then port forwarding will happen automatically and the flask app will work as intended. However, you can avoid latency issues by running locally.
 
 </details>
 
